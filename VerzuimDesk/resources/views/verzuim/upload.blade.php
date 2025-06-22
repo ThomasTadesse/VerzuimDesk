@@ -22,7 +22,7 @@
         file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" required>
 
     <button type="submit"
-        class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
+        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
         Uploaden
     </button>
 </form>
