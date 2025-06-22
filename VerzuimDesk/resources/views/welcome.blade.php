@@ -11,27 +11,66 @@
     </x-slot>
 
 <div class="py-12">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="p-6 text-gray-900 dark:text-gray-100">
-                <h1 class="text-3xl font-bold mb-4">Welcome to VerzuimDesk</h1>
-                <p class="mb-4">Your comprehensive absence management solution.</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="p-4 border rounded-lg">
-                        <h2 class="text-xl font-semibold mb-2">Quick Links</h2>
-                        <ul class="list-disc list-inside">
-                            <li>View Absences</li>
-                            <li>Report New Absence</li>
-                            <li>View Reports</li>
-                        </ul>
-                    </div>
-                    <div class="p-4 border rounded-lg">
-                        <h2 class="text-xl font-semibold mb-2">Recent Activity</h2>
-                        <p>No recent activities to display.</p>
-                    </div>
-                </div>
+
+   <div class="flex min-h-screen">
+
+     {{-- Main content --}}
+    <main class="flex-1 p-6">
+        <div class="flex justify-between items-center mb-4">
+            <div>
+                <h1 class="text-xl font-semibold">Welkom terug</h1>
+            </div>
+            <div class="text-sm">
+                Datum:  {{ now()->format('d M Y') }}
             </div>
         </div>
-    </div>
+
+        {{-- Sections --}}
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+
+            <div class="rounded-lg p-4" style="background-color: rgb(56, 189, 248);">
+                <h2 class="text-lg font-bold mb-2">Agenda</h2>
+                <p class="text-sm text-white/80">Geen activiteiten</p>
+            </div>
+
+            <div class="rounded-lg p-4" style="background-color: rgb(56, 189, 248);">
+                <h2 class="text-lg font-bold mb-2">Zaken</h2>
+                <p class="text-sm text-white/80">Geen zaken met openstaande taken</p>
+            </div>
+
+            <div class="rounded-lg p-4 md:col-span-2" style="background-color: rgb(56, 189, 248);">
+                <h2 class="text-lg font-bold mb-2">inzicht studenten aanwezigheid</h2>
+                <p class="text-sm text-white/80 mb-2">Overzicht huidig collegejaar</p>
+                <canvas id="aanwezigChart" height="150"></canvas>
+            </div>
+
+        </div>
+    </main>
 </div>
+</div>
+
 </x-layout>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+<script>
+    const ctx = document.getElementById('aanwezigChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Aanwezig', 'Geoorloofd afwezig', 'Ongeoorloofd afwezig'],
+            datasets: [{
+                data: [75, 15, 10], // Dummy data: 75% aanwezig, 15% geoorloofd afwezig, 10% ongeoorloofd afwezig
+                backgroundColor: ['#3b82f6', '#facc15', '#ef4444'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    labels: { color: 'white' }
+                }
+            }
+        }
+    });
+</script>
