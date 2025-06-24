@@ -9,10 +9,7 @@
             <h1 class="text-2xl font-bold">Portaal</h1>
             <p class="text-sm text-gray-700">VerzuimDesk</p>
         </div>
-        <a href="{{ url('/verzuim/import') }}" class="ml-6 mt-3 text-lg font-semibold text-black hover:text-gray-600">Importeren</a>
-        <a href="{{ url('/verzuim/upload') }}" class="ml-6 mt-3 text-lg font-semibold text-black hover:text-gray-600">Uploaden</a>
-        <a href="{{ url('/verzuim/resultaat') }}" class="ml-6 mt-3 text-lg font-semibold text-black hover:text-gray-600">zoeken</a>
-        <a href="{{ url('/verzuim/select') }}" class="ml-6 mt-3 text-lg font-semibold text-black hover:text-gray-600">inzagen</a>
+
     </div>
     <div class="mr-6">
         @auth
