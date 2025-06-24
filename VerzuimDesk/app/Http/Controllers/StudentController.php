@@ -10,9 +10,32 @@ class StudentController extends Controller
     /**
      * Display a listing of the students.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $students = Student::latest()->paginate(10);
+        $query = Student::query();
+        
+        // Apply search filter if provided
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('student_number', 'like', "%{$search}%");
+            });
+        }
+        
+        // Apply age group filter if provided
+        if ($request->has('age_group') && !empty($request->age_group)) {
+            $query->where('age_group', $request->age_group);
+        }
+        
+        // Get the paginated results
+        $students = $query->latest()->paginate(12);
+        
+        // Append query parameters to pagination links
+        if ($request->has('search') || $request->has('age_group')) {
+            $students->appends($request->only(['search', 'age_group']));
+        }
+        
         return view('students.index', compact('students'));
     }
 
@@ -45,8 +68,16 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
+        // Get the student's attendance records
         $attendances = $student->attendances()->with(['subject', 'teacher', 'group'])->latest()->paginate(5);
-        return view('students.show', compact('student', 'attendances'));
+        
+        // Get the student's absences if the relationship exists
+        $absences = [];
+        if (method_exists($student, 'absences')) {
+            $absences = $student->absences()->latest()->take(5)->get();
+        }
+        
+        return view('students.show', compact('student', 'attendances', 'absences'));
     }
 
     /**
