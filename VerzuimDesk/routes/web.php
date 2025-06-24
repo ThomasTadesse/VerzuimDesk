@@ -36,4 +36,12 @@ Route::middleware('auth')->group(function () {
     Route::resource('attendances', AttendanceController::class);
 });
 
+// Language Switcher
+Route::get('/language/switch', function () {
+    $lang = request('lang', 'nl');
+    session(['locale' => $lang]);
+    app()->setLocale($lang);
+    return redirect()->back();
+})->name('language.switch');
+
 require __DIR__.'/auth.php';

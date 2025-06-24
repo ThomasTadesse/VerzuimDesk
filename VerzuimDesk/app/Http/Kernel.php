@@ -22,8 +22,8 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups = [
         'web' => [
-            // ...
-            \App\Http\Middleware\ShareMaintenanceMode::class,
+            // ...existing middleware...
+            \App\Http\Middleware\SetLocale::class,
         ],
 
         'api' => [
