@@ -54,23 +54,63 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 <script>
-    const ctx = document.getElementById('aanwezigChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: ['Aanwezig', 'Geoorloofd afwezig', 'Ongeoorloofd afwezig'],
-            datasets: [{
-                data: [75, 15, 10], // Dummy data: 75% aanwezig, 15% geoorloofd afwezig, 10% ongeoorloofd afwezig
-                backgroundColor: ['#3b82f6', '#facc15', '#ef4444'],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            plugins: {
-                legend: {
-                    labels: { color: 'white' }
+    // Fetch real attendance data from database
+    fetch('/attendance-stats')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('aanwezigChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Aanwezig', 'Geoorloofd afwezig', 'Ongeoorloofd afwezig', 'Niet geregistreerd'],
+                    datasets: [{
+                        data: [
+                            data.present, 
+                            data.excused, 
+                            data.unexcused,
+                            data.unregistered
+                        ],
+                        backgroundColor: ['#3b82f6', '#facc15', '#ef4444', '#94a3b8'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            labels: { color: 'white' }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.raw}%`;
+                                }
+                            }
+                        }
+                    }
                 }
-            }
-        }
-    });
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching attendance data:', error);
+            // Fallback to dummy data if API call fails
+            const ctx = document.getElementById('aanwezigChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Aanwezig', 'Geoorloofd afwezig', 'Ongeoorloofd afwezig'],
+                    datasets: [{
+                        data: [75, 15, 10],
+                        backgroundColor: ['#3b82f6', '#facc15', '#ef4444'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            labels: { color: 'white' }
+                        }
+                    }
+                }
+            });
+        });
 </script>

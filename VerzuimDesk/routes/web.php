@@ -36,6 +36,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('attendances', AttendanceController::class);
 });
 
+// Add this new route
+Route::get('/attendance-stats', [AttendanceController::class, 'getAttendanceStats'])->name('attendance.stats');
+
 // Language Switcher
 Route::get('/language/switch', function () {
     $lang = request('lang', 'nl');

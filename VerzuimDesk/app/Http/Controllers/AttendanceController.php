@@ -8,6 +8,7 @@ use App\Models\Teacher;
 use App\Models\Subject;
 use App\Models\Group;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AttendanceController extends Controller
 {
@@ -106,5 +107,40 @@ class AttendanceController extends Controller
         $attendance->delete();
 
         return redirect()->route('attendances.index')->with('success', 'Attendance record deleted successfully.');
+    }
+
+    /**
+     * Get attendance statistics.
+     */
+    public function getAttendanceStats()
+    {
+        // Calculate percentages from all attendance records
+        $stats = Attendance::select(
+            DB::raw('SUM(present_percentage) as present'),
+            DB::raw('SUM(excused_absence_percentage) as excused'),
+            DB::raw('SUM(unexcused_absence_percentage) as unexcused'),
+            DB::raw('SUM(unregistered_percentage) as unregistered')
+        )->first();
+        
+        // Calculate total to determine percentages
+        $total = $stats->present + $stats->excused + $stats->unexcused + $stats->unregistered;
+        
+        // Prevent division by zero
+        if ($total == 0) {
+            return response()->json([
+                'present' => 0,
+                'excused' => 0,
+                'unexcused' => 0,
+                'unregistered' => 0
+            ]);
+        }
+        
+        // Return normalized percentages
+        return response()->json([
+            'present' => round(($stats->present / $total) * 100, 1),
+            'excused' => round(($stats->excused / $total) * 100, 1),
+            'unexcused' => round(($stats->unexcused / $total) * 100, 1),
+            'unregistered' => round(($stats->unregistered / $total) * 100, 1)
+        ]);
     }
 }
