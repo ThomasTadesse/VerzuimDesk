@@ -1,6 +1,10 @@
 <header class="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-1 py-1 bg-sky-400 custom-shadow">
     <div class="flex">
-        <a href="{{ url('/') }}"><img class="h-14 w-auto mr-6 ml-6" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&amp;shade=600"></a>
+        <a href="{{ url('/') }}">
+            <svg class="h-14 w-auto mr-6 ml-6" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+        </a>
         <div>
             <h1 class="text-2xl font-bold">Portaal</h1>
             <p class="text-sm text-gray-700">VerzuimDesk</p>
