@@ -21,8 +21,12 @@ class TeacherSeeder extends Seeder
             ['name' => 'Jamil,M', 'code' => 'JAM.M.'],
             ['name' => 'Ommel,', 'code' => 'OMM.'],
             ['name' => 'Jonge,M', 'code' => 'JON.M.'],
-            ['name' => 'Broek,Y.', 'code' => 'BRO.Y.'],
             ['name' => 'Rahim,T.', 'code' => 'RAH.T.'],
+            ['name' => 'Broek,Y.', 'code' => 'BRO.Y.'],
+            ['name' => 'Jagroep,S', 'code' => 'JAG.S.'],
+            ['name' => 'Esen,M', 'code' => 'ESE.M.'],
+            ['name' => 'Garst,', 'code' => 'GAR.'],
+            ['name' => 'Minnaard Evertsen,M', 'code' => 'MIN.M.'],
         ];
 
         foreach ($teachers as $teacher) {

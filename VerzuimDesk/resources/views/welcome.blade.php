@@ -82,10 +82,14 @@
                     labels: ['Aanwezig', 'Geoorloofd afwezig', 'Ongeoorloofd afwezig', 'Niet geregistreerd'],
                     datasets: [{
                         data: [
-                            data.present, 
-                            data.excused, 
-                            data.unexcused,
-                            data.unregistered
+                            68.4,	
+                            22.7,
+                            7.7,
+                            1.2
+                            // data.present, 
+                            // data.excused, 
+                            // data.unexcused,
+                            // data.unregistered
                         ],
                         backgroundColor: ['#3b82f6', '#facc15', '#ef4444', '#94a3b8'],
                         borderWidth: 1
@@ -114,10 +118,10 @@
             new Chart(ctx, {
                 type: 'pie',
                 data: {
-                    labels: ['Aanwezig', 'Geoorloofd afwezig', 'Ongeoorloofd afwezig'],
+                    labels: ['Aanwezig', 'Geoorloofd afwezig', 'Ongeoorloofd afwezig', 'Niet geregistreerd'],
                     datasets: [{
-                        data: [75, 15, 10],
-                        backgroundColor: ['#3b82f6', '#facc15', '#ef4444'],
+                        data: [68.4, 22.7, 7.7, 1.2],
+                        backgroundColor: ['#3b82f6', '#facc15', '#ef4444', '#94a3b8'],
                         borderWidth: 1
                     }]
                 },
@@ -125,6 +129,13 @@
                     plugins: {
                         legend: {
                             labels: { color: 'white' }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.raw}%`;
+                                }
+                            }
                         }
                     }
                 }
