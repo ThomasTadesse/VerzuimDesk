@@ -31,6 +31,7 @@
                                     </div>
                                     <h2 class="mt-4 text-xl font-bold">{{ $student->name }}</h2>
                                     <p class="text-gray-600 dark:text-gray-300">{{ $student->student_number }}</p>
+                                    <p class="text-gray-600 dark:text-gray-300">{{ $groupCode ?? 'No group assigned' }}</p>
                                 </div>
                                 <div class="mt-6 flex justify-center space-x-2">
                                     <a href="{{ route('students.edit', $student) }}" class="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">
@@ -62,44 +63,8 @@
                                             <canvas id="absenceChart" height="200"></canvas>
                                         </div>
                                     </div>
-                                    
-                                    @if(isset($student->email))
-                                    <div>
-                                        <p class="text-sm text-gray-600 dark:text-gray-400">Email</p>
-                                        <p class="font-medium">{{ $student->email }}</p>
-                                    </div>
-                                    @endif
-
-                                    @if(isset($student->phone))
-                                    <div>
-                                        <p class="text-sm text-gray-600 dark:text-gray-400">Telefoon</p>
-                                        <p class="font-medium">{{ $student->phone }}</p>
-                                    </div>
-                                    @endif
-
-                                    @if(isset($student->address))
-                                    <div>
-                                        <p class="text-sm text-gray-600 dark:text-gray-400">Adres</p>
-                                        <p class="font-medium">{{ $student->address }}</p>
-                                    </div>
-                                    @endif
-
-                                    @if(isset($student->class))
-                                    <div>
-                                        <p class="text-sm text-gray-600 dark:text-gray-400">Klas</p>
-                                        <p class="font-medium">{{ $student->class }}</p>
-                                    </div>
-                                    @endif
                                 </div>
 
-                                @if(isset($student->notes))
-                                <div class="mt-6">
-                                    <h4 class="font-medium mb-2">Notities</h4>
-                                    <div class="p-3 bg-gray-50 dark:bg-gray-700 rounded">
-                                        <p>{{ $student->notes }}</p>
-                                    </div>
-                                </div>
-                                @endif
 
                                 <!-- Verzuim section - if you have absence data -->
                                 @if(isset($absences) && count($absences) > 0)
@@ -164,8 +129,8 @@
                         {
                             label: 'Geoorloofd Verzuim',
                             data: authorizedData,
-                            backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(56, 189, 248, 0.5)',
+                            borderColor: 'rgba(56, 189, 248, 1)',
                             borderWidth: 2,
                             tension: 0.3,
                             fill: true
@@ -241,11 +206,11 @@
                     datasets: [{
                         data: [totalAuthorized, totalUnauthorized],
                         backgroundColor: [
-                            'rgba(75, 192, 192, 0.7)',
+                            'rgba(56, 189, 248, 0.7)',
                             'rgba(255, 99, 132, 0.7)'
                         ],
                         borderColor: [
-                            'rgba(75, 192, 192, 1)',
+                            'rgba(56, 189, 248, 1)',
                             'rgba(255, 99, 132, 1)'
                         ],
                         borderWidth: 1

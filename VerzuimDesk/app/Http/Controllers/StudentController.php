@@ -77,7 +77,15 @@ class StudentController extends Controller
         // Get absence records for the list display
         $absences = $this->getStudentAbsenceRecords($student);
 
-        return view('students.show', compact('student', 'absences', 'attendanceData'));
+        // Try to get group information from the student's most recent attendance
+        $latestAttendance = Attendance::where('student_id', $student->id)
+            ->with('group')  // Ensure we have the group relation
+            ->latest('date')
+            ->first();
+            
+        $groupCode = $latestAttendance && $latestAttendance->group ? $latestAttendance->group->code : null;
+
+        return view('students.show', compact('student', 'absences', 'attendanceData', 'groupCode'));
     }
     
     /**
