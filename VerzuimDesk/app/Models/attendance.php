@@ -26,21 +26,33 @@ class Attendance extends Model
         'date' => 'date',
     ];
 
+    /**
+     * Get the student that owns the attendance record.
+     */
     public function student(): BelongsTo
     {
         return $this->belongsTo(Student::class);
     }
 
+    /**
+     * Get the teacher that created the attendance record.
+     */
     public function teacher(): BelongsTo
     {
         return $this->belongsTo(Teacher::class);
     }
 
+    /**
+     * Get the subject associated with the attendance record.
+     */
     public function subject(): BelongsTo
     {
         return $this->belongsTo(Subject::class);
     }
 
+    /**
+     * Get the group associated with the attendance record.
+     */
     public function group(): BelongsTo
     {
         return $this->belongsTo(Group::class);

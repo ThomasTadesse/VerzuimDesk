@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('student_number')->unique();
             $table->string('name');
-            $table->enum('age_group', ['<18', '18-22', '>22'])->default('18-22');
+            $table->enum('age_group', ['<18', '18-22', '23+'])->default('18-22');
             $table->timestamps();
         });
     }
