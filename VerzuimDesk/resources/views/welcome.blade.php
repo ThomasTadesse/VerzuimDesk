@@ -82,14 +82,10 @@
                     labels: ['Aanwezig', 'Geoorloofd afwezig', 'Ongeoorloofd afwezig', 'Niet geregistreerd'],
                     datasets: [{
                         data: [
-                            68.4,	
-                            22.7,
-                            7.7,
-                            1.2
-                            // data.present, 
-                            // data.excused, 
-                            // data.unexcused,
-                            // data.unregistered
+                            data.present, 
+                            data.excused, 
+                            data.unexcused,
+                            data.unregistered
                         ],
                         backgroundColor: ['#3b82f6', '#facc15', '#ef4444', '#94a3b8'],
                         borderWidth: 1
