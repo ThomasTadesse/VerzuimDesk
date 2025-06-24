@@ -1,12 +1,13 @@
 <?php
 
 return [
-    'profile' => 'Profile',
-    'logout' => 'Logout',
-    'login' => 'Login',
-    'students' => 'Students',
-    'teachers' => 'Teachers',
-    'subjects' => 'Subjects',
-    'groups' => 'Groups',
-    'attendance' => 'Attendance',
+    'profile' => 'Profiel',
+    'logout' => 'Uitloggen',
+    'login' => 'Inloggen',
+    'students' => 'Studenten',
+    'teachers' => 'Docenten',
+    'subjects' => 'Vakken',
+    'groups' => 'Groepen',
+    'attendance' => 'Aanwezigheid',
 ];
+

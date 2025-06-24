@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Teachers') }}
+            {{ __('Docenten') }}
         </h2>
     </x-slot>
 
@@ -10,9 +10,9 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-lg font-semibold">All Teachers</h3>
+                        <h3 class="text-lg font-semibold">Alle Docenten</h3>
                         <a href="{{ route('teachers.create') }}" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                            Add New Teacher
+                            Nieuwe Docent Toevoegen
                         </a>
                     </div>
 
@@ -29,12 +29,12 @@
                     @endif
 
                     <div class="overflow-x-auto">
-                        <table class="min-w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700">
+                        <table class="min-w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700">
                             <thead>
-                                <tr>
+                                <tr class="bg-gray-100 dark:bg-gray-700">
                                     <th class="px-4 py-2 border-b border-gray-300 dark:border-gray-700 text-left">Code</th>
-                                    <th class="px-4 py-2 border-b border-gray-300 dark:border-gray-700 text-left">Name</th>
-                                    <th class="px-4 py-2 border-b border-gray-300 dark:border-gray-700 text-left">Actions</th>
+                                    <th class="px-4 py-2 border-b border-gray-300 dark:border-gray-700 text-left">Naam</th>
+                                    <th class="px-4 py-2 border-b border-gray-300 dark:border-gray-700 text-left">Acties</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -44,17 +44,17 @@
                                         <td class="px-4 py-2 border-b border-gray-300 dark:border-gray-700">{{ $teacher->name }}</td>
                                         <td class="px-4 py-2 border-b border-gray-300 dark:border-gray-700">
                                             <div class="flex space-x-2">
-                                                <a href="{{ route('teachers.show', $teacher) }}" class="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600">
-                                                    View
+                                                <a href="{{ route('teachers.show', $teacher) }}" class="text-blue-500 hover:text-blue-700 p-1" title="Bekijken">
+                                                    ⓘ
                                                 </a>
-                                                <a href="{{ route('teachers.edit', $teacher) }}" class="px-2 py-1 text-xs bg-yellow-500 text-white rounded hover:bg-yellow-600">
-                                                    Edit
+                                                <a href="{{ route('teachers.edit', $teacher) }}" class="text-yellow-500 hover:text-yellow-700 p-1" title="Bewerken">
+                                                    ✎
                                                 </a>
-                                                <form action="{{ route('teachers.destroy', $teacher) }}" method="POST" onsubmit="return confirm('Are you sure?')">
+                                                <form action="{{ route('teachers.destroy', $teacher) }}" method="POST" onsubmit="return confirm('Weet je het zeker?')">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600">
-                                                        Delete
+                                                    <button type="submit" class="text-red-500 hover:text-red-700 p-1" title="Verwijderen">
+                                                        🗑️
                                                     </button>
                                                 </form>
                                             </div>
@@ -62,7 +62,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="3" class="px-4 py-2 text-center">No teachers found.</td>
+                                        <td colspan="3" class="px-4 py-2 text-center">Geen docenten gevonden.</td>
                                     </tr>
                                 @endforelse
                             </tbody>
