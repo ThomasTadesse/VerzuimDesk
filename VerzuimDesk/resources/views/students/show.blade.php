@@ -55,6 +55,14 @@
                                         <p class="font-medium">{{ $student->age_group }}</p>
                                     </div>
                                     
+                                    <!-- Absentie grafiek -->
+                                    <div class="md:col-span-2 mt-4">
+                                        <h4 class="text-sm text-gray-600 dark:text-gray-400 mb-2">Absentie Overzicht</h4>
+                                        <div class="bg-white dark:bg-gray-700 p-3 rounded-lg shadow-inner">
+                                            <canvas id="absenceChart" height="200"></canvas>
+                                        </div>
+                                    </div>
+                                    
                                     @if(isset($student->email))
                                     <div>
                                         <p class="text-sm text-gray-600 dark:text-gray-400">Email</p>
@@ -122,4 +130,146 @@
             </div>
         </div>
     </div>
+
+    <!-- Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('absenceChart').getContext('2d');
+            
+            // Haal data op uit de controller via blade
+            const attendanceData = @json($attendanceData ?? []);
+            
+            // Bereid labels en datasets voor
+            const labels = attendanceData.map(item => item.month);
+            const authorizedData = attendanceData.map(item => item.excused_absence);
+            const unauthorizedData = attendanceData.map(item => item.unexcused_absence);
+            
+            // Calculate totals for doughnut chart
+            const totalAuthorized = authorizedData.reduce((acc, val) => acc + parseFloat(val), 0);
+            const totalUnauthorized = unauthorizedData.reduce((acc, val) => acc + parseFloat(val), 0);
+            
+            // Create two charts side by side
+            const absenceChartEl = document.getElementById('absenceChart');
+            const absenceChartCtx = absenceChartEl.getContext('2d');
+            
+            // Configure the stacked bar chart for monthly data
+            const stackedBarChart = new Chart(absenceChartCtx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Geoorloofd Verzuim',
+                            data: authorizedData,
+                            backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true
+                        },
+                        {
+                            label: 'Ongeoorloofd Verzuim',
+                            data: unauthorizedData,
+                            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Verzuimtrend'
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y.toFixed(1);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Maand'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Absentie'
+                            },
+                            ticks: {
+                                precision: 1
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'nearest'
+                    }
+                }
+            });
+            
+            // Add a pie chart after the main chart
+            const pieChartContainer = document.createElement('div');
+            pieChartContainer.className = 'mt-6';
+            pieChartContainer.innerHTML = '<h4 class="text-sm text-gray-600 dark:text-gray-400 mb-2">Verdeling Verzuim</h4><div class="bg-white dark:bg-gray-700 p-3 rounded-lg shadow-inner"><canvas id="absencePieChart" height="200"></canvas></div>';
+            absenceChartEl.parentNode.parentNode.appendChild(pieChartContainer);
+            
+            const pieCtx = document.getElementById('absencePieChart').getContext('2d');
+            const pieChart = new Chart(pieCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Geoorloofd', 'Ongeoorloofd'],
+                    datasets: [{
+                        data: [totalAuthorized, totalUnauthorized],
+                        backgroundColor: [
+                            'rgba(75, 192, 192, 0.7)',
+                            'rgba(255, 99, 132, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(255, 99, 132, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const total = totalAuthorized + totalUnauthorized;
+                                    const percentage = Math.round((context.parsed / total) * 100);
+                                    return context.label + ': ' + context.parsed.toFixed(1) + ' (' + percentage + '%)';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
 </x-app-layout>

@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Models\Attendance;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class StudentController extends Controller
 {
@@ -64,20 +67,82 @@ class StudentController extends Controller
     }
 
     /**
-     * Display the specified student.
+     * Display the specified resource.
      */
     public function show(Student $student)
     {
-        // Get the student's attendance records
-        $attendances = $student->attendances()->with(['subject', 'teacher', 'group'])->latest()->paginate(5);
+        // Get attendance data for the chart - last 6 months
+        $attendanceData = $this->getStudentAttendanceData($student);
         
-        // Get the student's absences if the relationship exists
-        $absences = [];
-        if (method_exists($student, 'absences')) {
-            $absences = $student->absences()->latest()->take(5)->get();
+        // Get absence records for the list display
+        $absences = $this->getStudentAbsenceRecords($student);
+
+        return view('students.show', compact('student', 'absences', 'attendanceData'));
+    }
+    
+    /**
+     * Get formatted attendance data for charts
+     */
+    private function getStudentAttendanceData(Student $student)
+    {
+        // Get last 6 months of data
+        $sixMonthsAgo = Carbon::now()->subMonths(6)->toDateString();
+        
+        // Use SQLite compatible date functions
+        $attendanceData = DB::table('attendances')
+            ->select(
+                DB::raw("strftime('%m', date) as month_num"),
+                DB::raw("strftime('%m-%Y', date) as month_year"),
+                DB::raw('SUM(excused_absence_percentage) as excused_absence'),
+                DB::raw('SUM(unexcused_absence_percentage) as unexcused_absence')
+            )
+            ->where('student_id', $student->id)
+            ->where('date', '>=', $sixMonthsAgo)
+            ->groupBy('month_num', 'month_year')
+            ->orderBy('month_year')
+            ->get();
+        
+        // Convert month numbers to month names
+        $monthNames = [
+            '01' => 'January', '02' => 'February', '03' => 'March', 
+            '04' => 'April', '05' => 'May', '06' => 'June',
+            '07' => 'July', '08' => 'August', '09' => 'September',
+            '10' => 'October', '11' => 'November', '12' => 'December'
+        ];
+        
+        foreach ($attendanceData as $item) {
+            // Extract the month part from month_year
+            $monthPart = substr($item->month_num, 0, 2);
+            $item->month = $monthNames[$monthPart] ?? $monthPart;
+            
+            // Round the values for better display
+            $item->excused_absence = round($item->excused_absence, 2);
+            $item->unexcused_absence = round($item->unexcused_absence, 2);
         }
         
-        return view('students.show', compact('student', 'attendances', 'absences'));
+        return $attendanceData;
+    }
+    
+    /**
+     * Get individual absence records for the student
+     */
+    private function getStudentAbsenceRecords(Student $student)
+    {
+        // Get records for display in the absence list
+        // This would be used for the existing absences section in the view
+        return Attendance::where('student_id', $student->id)
+            ->whereRaw('(unexcused_absence_percentage > 0 OR excused_absence_percentage > 0)')
+            ->with('subject')
+            ->orderBy('date', 'desc')
+            ->limit(10)
+            ->get()
+            ->map(function($attendance) {
+                return (object)[
+                    'date' => Carbon::parse($attendance->date),
+                    'type' => $attendance->subject->name ?? 'Unknown subject',
+                    'is_authorized' => $attendance->excused_absence_percentage > 0 && $attendance->unexcused_absence_percentage == 0
+                ];
+            });
     }
 
     /**
