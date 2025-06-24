@@ -9,8 +9,20 @@
             <h1 class="text-2xl font-bold">Portaal</h1>
             <p class="text-sm text-gray-700">VerzuimDesk</p>
         </div>
-
     </div>
+
+    @auth
+    <div class="flex-grow flex justify-center">
+        <nav class="hidden md:flex space-x-4">
+            <a href="{{ route('students.index') }}" class="text-gray-900 hover:bg-sky-500 px-3 py-2 rounded-md text-sm font-medium">Students</a>
+            <a href="{{ route('teachers.index') }}" class="text-gray-900 hover:bg-sky-500 px-3 py-2 rounded-md text-sm font-medium">Teachers</a>
+            <a href="{{ route('subjects.index') }}" class="text-gray-900 hover:bg-sky-500 px-3 py-2 rounded-md text-sm font-medium">Subjects</a>
+            <a href="{{ route('groups.index') }}" class="text-gray-900 hover:bg-sky-500 px-3 py-2 rounded-md text-sm font-medium">Groups</a>
+            <a href="{{ route('attendances.index') }}" class="text-gray-900 hover:bg-sky-500 px-3 py-2 rounded-md text-sm font-medium">Attendance</a>
+        </nav>
+    </div>
+    @endauth
+    
     <div class="mr-6">
         @auth
             <a href="{{ url('/profile') }}" class="text-lg font-semibold text-black hover:text-gray-600">Profiel</a>
