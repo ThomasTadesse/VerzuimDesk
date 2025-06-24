@@ -30,7 +30,24 @@
 
             <div class="rounded-lg p-4" style="background-color: rgb(56, 189, 248);">
                 <h2 class="text-lg font-bold mb-2">Agenda</h2>
-                <p class="text-sm text-white/80">Geen activiteiten</p>
+                <div class="text-sm text-white space-y-2 max-h-40 overflow-y-auto">
+                    <div class="border-b border-white/20 pb-1">
+                        <div class="font-medium">Vandaag, 09:00-10:30</div>
+                        <div class="text-white/80">Projectbespreking</div>
+                    </div>
+                    <div class="border-b border-white/20 pb-1">
+                        <div class="font-medium">Morgen, 13:00-14:30</div>
+                        <div class="text-white/80">Leerlingengesprekken</div>
+                    </div>
+                    <div class="border-b border-white/20 pb-1">
+                        <div class="font-medium">{{ now()->addDays(3)->format('d M') }}, 11:00-12:00</div>
+                        <div class="text-white/80">Teamvergadering</div>
+                    </div>
+                    <div>
+                        <div class="font-medium">{{ now()->addDays(5)->format('d M') }}, 10:00-11:30</div>
+                        <div class="text-white/80">Workshop verzuimbeleid</div>
+                    </div>
+                </div>
             </div>
 
             <div class="rounded-lg p-4" style="background-color: rgb(56, 189, 248);">
