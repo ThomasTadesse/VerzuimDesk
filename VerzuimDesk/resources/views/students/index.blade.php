@@ -47,11 +47,22 @@
                                     <option value="23+" {{ request('age_group') === '23+' ? 'selected' : '' }}>23 en ouder</option>
                                 </select>
                             </div>
+                            <div class="w-full md:w-auto">
+                                <label for="group_code" class="block text-sm mb-1">Groep</label>
+                                <select name="group_code" id="group_code" class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-600">
+                                    <option value="">Alle groepen</option>
+                                    @foreach($groupCodes as $code)
+                                        <option value="{{ $code }}" {{ request('group_code') == $code ? 'selected' : '' }}>
+                                            {{ $code }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                             <div class="w-full md:w-auto flex items-end">
                                 <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
                                     Filteren
                                 </button>
-                                @if(request()->has('search') || request()->has('age_group'))
+                                @if(request()->has('search') || request()->has('age_group') || request()->has('group_code'))
                                     <a href="{{ route('students.index') }}" class="ml-2 px-4 py-2 bg-gray-300 text-gray-700 dark:bg-gray-600 dark:text-white rounded hover:bg-gray-400 dark:hover:bg-gray-500">
                                         Reset
                                     </a>

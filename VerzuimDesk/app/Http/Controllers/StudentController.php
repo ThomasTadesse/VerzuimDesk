@@ -32,6 +32,22 @@ class StudentController extends Controller
             $query->where('age_group', $request->age_group);
         }
         
+        // Apply group filter if provided
+        if ($request->has('group_code') && !empty($request->group_code)) {
+            // Find the group by code
+            $group = Group::where('code', $request->group_code)->first();
+            
+            if ($group) {
+                // Get all student IDs from attendances that have the requested group
+                $studentIds = Attendance::where('group_id', $group->id)
+                                      ->distinct()
+                                      ->pluck('student_id')
+                                      ->toArray();
+                                      
+                $query->whereIn('id', $studentIds);
+            }
+        }
+        
         // Get the paginated results
         $students = $query->latest()->paginate(12);
         
@@ -52,12 +68,15 @@ class StudentController extends Controller
             return $student;
         });
         
+        // Get all unique group codes for the filter dropdown
+        $groupCodes = Group::orderBy('code')->pluck('code')->unique();
+        
         // Append query parameters to pagination links
-        if ($request->has('search') || $request->has('age_group')) {
-            $students->appends($request->only(['search', 'age_group']));
+        if ($request->has('search') || $request->has('age_group') || $request->has('group_code')) {
+            $students->appends($request->only(['search', 'age_group', 'group_code']));
         }
         
-        return view('students.index', compact('students'));
+        return view('students.index', compact('students', 'groupCodes'));
     }
 
     /**
