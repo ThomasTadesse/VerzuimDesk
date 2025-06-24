@@ -65,12 +65,24 @@
                         @forelse($students as $student)
                             <div class="bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-600">
                                 <div class="p-4">
-                                    <h3 class="font-bold text-lg mb-2">{{ $student->name }}</h3>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="font-bold text-lg">{{ $student->name }}</h3>
+                                        <span class="text-3xl font-bold text-blue-800 dark:text-blue-200">
+                                            {{ strtoupper(substr($student->name, 0, 2)) }}
+                                        </span>
+                                    </div>
                                     <div class="mb-2 text-sm">
                                         <span class="font-semibold">Studentnummer:</span> {{ $student->student_number }}
                                     </div>
                                     <div class="mb-4 text-sm">
-                                        <span class="font-semibold">Leeftijdsgroep:</span> {{ $student->age_group }}
+                                        <span class="font-semibold">Groep:</span> 
+                                        @if(isset($student->group) && $student->group)
+                                            {{ $student->group->code }}
+                                        @elseif($student->group_code) 
+                                            {{ $student->group_code }}
+                                        @else
+                                            Geen groep
+                                        @endif
                                     </div>
                                     <div class="flex justify-end space-x-2 pt-2 border-t border-gray-200 dark:border-gray-600">
                                         <a href="{{ route('students.show', $student) }}" class="text-blue-500 hover:text-blue-700 p-1" title="Bekijken">

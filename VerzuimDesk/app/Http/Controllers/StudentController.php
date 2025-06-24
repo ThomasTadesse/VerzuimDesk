@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Student;
 use App\Models\Attendance;
+use App\Models\Group;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -15,7 +16,7 @@ class StudentController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Student::query();
+        $query = Student::with('group');
         
         // Apply search filter if provided
         if ($request->has('search') && !empty($request->search)) {
@@ -33,6 +34,23 @@ class StudentController extends Controller
         
         // Get the paginated results
         $students = $query->latest()->paginate(12);
+        
+        // We need to make sure each student has group information available
+        $students->map(function ($student) {
+            // If student doesn't have a group relationship, get it from the latest attendance
+            if (!$student->group) {
+                $latestAttendance = Attendance::where('student_id', $student->id)
+                    ->with('group')
+                    ->latest('date')
+                    ->first();
+                
+                // Set the group code property directly on the student object
+                $student->group_code = $latestAttendance && $latestAttendance->group 
+                    ? $latestAttendance->group->code 
+                    : null;
+            }
+            return $student;
+        });
         
         // Append query parameters to pagination links
         if ($request->has('search') || $request->has('age_group')) {
